@@ -36,20 +36,19 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 import javax.swing.border.Border;
 
-public class Login extends JFrame {
 
-	 private static final long serialVersionUID = 1L;
-	protected static final String String = null;
+public class Login extends JFrame {
+	
+	    private static final long serialVersionUID = 1L;
 	    private JPanel p1,p2,p3,p4,p5,p6,p7,p8,p9,p10;
-     private Connection con;
-     private PreparedStatement ps;
+        private Connection con;
+        private PreparedStatement ps;
 	    private ResultSet rs;
 	    private static JLabel date;
 		private static JLabel empty;
 		private static JLabel time;
 		private static JLabel kappa;
 		private static JLabel hash;
-		private JTextField t1;
 		public String username="";
 		public String name="";
 		public String first="";
@@ -59,12 +58,8 @@ public class Login extends JFrame {
 		public String somo="";
 	
 	
-	
-		
-	public Login() {
-		
-	
-		
+
+	   public Login(){
 		super("Result System");
 		try {
 		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -76,11 +71,29 @@ public class Login extends JFrame {
 		} catch (Exception e) {
 
 		}
-		
-		connect();
 		 Calendar timer=Calendar.getInstance();
 		 timer.getTime();
 		 SimpleDateFormat dt=new SimpleDateFormat("MMMM");
+		
+		
+             try {
+				
+				Class.forName("org.sqlite.JDBC");
+				con=DriverManager.getConnection("jdbc:sqlite:Zeus.sqlite");
+			
+		} catch (Exception e) {
+		JOptionPane.showMessageDialog(null, e.getStackTrace());
+		}
+		 finally{
+            try{
+                rs.close();
+                ps.close();
+            }catch(Exception ex){
+                ex.getStackTrace();
+            }}
+			
+		
+		
 		
 		
 		JLabel n=new JLabel("STUDENT'S RESULT MANAGEMENT SYSTEM");n.setFont(new Font("Segoe UI",+Font.BOLD,28));
@@ -102,15 +115,15 @@ public class Login extends JFrame {
 		p1.add(p2, BorderLayout.NORTH);
 		p2.add(n);
 		p1.add(p3, BorderLayout.CENTER);
-		Icon log1=new ImageIcon(this.getClass().getResource("/log1.png"));
-	//	Icon log2=new ImageIcon(this.getClass().getResource("/logo2.png"));
+		Icon log1=new ImageIcon(this.getClass().getResource("/logo.png"));
+		//Icon log2=new ImageIcon(this.getClass().getResource("/logo2.png"));
 		Icon ok=new ImageIcon(this.getClass().getResource("/ok.png"));
 		
 		p3.setLayout(new BorderLayout());p5.setBackground(Color.BLUE);
 		
 		p3.add(p4, BorderLayout.WEST);
 		p3.add(p5, BorderLayout.CENTER);
-	//	p3.add(p10, BorderLayout.EAST);
+		p3.add(p10, BorderLayout.EAST);
 		
 		JLabel lll=new JLabel();lll.setIcon(log1);
 		p4.add(lll);
@@ -120,22 +133,22 @@ public class Login extends JFrame {
 		
 		p5.setLayout(new BorderLayout());
 		p5.add(p6, BorderLayout.NORTH);
-		p5.add(p7, BorderLayout.CENTER);p8.setBackground(new Color(255,228,196));
-		p9.setBackground(new Color(255,250,250));
+		p5.add(p7, BorderLayout.CENTER);p8.setBackground(new Color(255,255,0));
+		p9.setBackground(new Color(213,219,49));
 		
 		p7.setLayout(new BorderLayout());
 		p7.add(p8, BorderLayout.NORTH);
 		p7.add(p9, BorderLayout.CENTER);
-		JLabel n1=new JLabel("ADMINISTRATOR LOGIN FORM");n1.setFont(new Font("Segoe Script",Font.BOLD,18));
+		JLabel n1=new JLabel("USER LOGIN FORM");n1.setFont(new Font("Segoe Script",Font.BOLD,18));
 		n1.setForeground(new Color(0,0,0));
 		p8.add(n1);	
 		
 		p9.setLayout(new GridBagLayout());
 		JLabel l1=new JLabel("User Name");l1.setFont(new Font("Courier",Font.BOLD,17));l1.setForeground(new Color(0,0,0));
-		t1=new JTextField(10);t1.setToolTipText("Enter User Name");
+		JTextField t1=new JTextField(10);t1.setToolTipText("Enter User Name");
 		
 		JLabel l2=new JLabel("Password");l2.setFont(new Font("Courier",Font.BOLD,17));l2.setForeground(new Color(0,0,0));
-		final JPasswordField t2=new JPasswordField(10);t2.setToolTipText("Enter Password");
+		JPasswordField t2=new JPasswordField(10);t2.setToolTipText("Enter Password");
 		
 		JButton b=new JButton("Login");b.setIcon(ok);
 
@@ -164,37 +177,33 @@ public class Login extends JFrame {
 		p7.setBorder(BorderFactory.createCompoundBorder(p7in, p7ou));
 		//p4.setBorder(BorderFactory.createCompoundBorder(p7in, p7ou));
 		
-	
-		
 		b.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ev) {
-			
+					
+					String user=t1.getText();	
+					@SuppressWarnings("deprecation")
+					String pass=t2.getText();
+					String sql="select username,password from Account";
+					
 					try {
-
 						
 						String p1=t1.getText();	
 						@SuppressWarnings("deprecation")
 						String p2=t2.getText();
 						
-					
-						
-				    	     String sql2 ="select count(Username) from Account where Password = '"+p2+"' and Username='"+p1+"'  ";
+				    	     String sql2 ="select count(username) from Account where password = '"+p2+"' and username='"+p1+"'  ";
 					    	 ps=con.prepareStatement(sql2);
 					    	 rs=ps.executeQuery();
+					    	 int count=Integer.parseInt(rs.getString("count(username)"));
 					    	 
-					    	
-					    	 int count=Integer.parseInt(rs.getString("count(Username)"));
-					    	
 					    	 
 							if(count>0 )
 							{
-								
-								
 								dispose();
-							
+								
 						    	
-						    	 String sql="select * from Account  where Username ='"+t1.getText()+"' ";
-						    	 ps=con.prepareStatement(sql);
+						    	 String sql11="select * from Account  where Username ='"+t1.getText()+"' ";
+						    	 ps=con.prepareStatement(sql11);
 						    	 rs=ps.executeQuery();
 						    	 subject= rs.getString("Level");
 						    	 first= rs.getString("FirstName");
@@ -204,43 +213,41 @@ public class Login extends JFrame {
 						    	
 						    	 name=level.toLowerCase()+" "+first+"  "+last;
 						    	 
- 
-                                  if(subject.equals("ADMIN")) {
-                                
-                                    Admin m=new Admin(name,subject,somo);
-      								m.setSize(1366,800);
-      								m.setVisible(true);
-      								m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      								m.setResizable(false);
-      								m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
-                                    con.close();
-      								
 
-                                  }else if(subject.equals("TEACHER")) {
-                                	  
-                                	Other oth=new Other(name,subject,somo);
-                              		oth.setSize(1366,800);
-                              		oth.setVisible(true);
-                              		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                              		oth.setResizable(false);
-                              		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
-                              		con.close(); 
-                                	  
-                                  }
-                                  
-                                  else if(subject.equals("ACADEMIC")) {
-                                	  
-                                  	    Academic oth=new Academic(name,subject,somo);
-                                		oth.setSize(1366,800);
-                                		oth.setVisible(true);
-                                		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                		oth.setResizable(false);
-                                		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
-                                		con.close(); 
-                                  	  
-                                    }
-						    	
-							}
+                                 if(subject.equals("ADMIN")) {
+                               
+                                   Admin m=new Admin(name,subject,somo);
+     								m.setSize(1366,800);
+     								m.setVisible(true);
+     								m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+     								m.setResizable(false);
+     								m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
+                                   con.close();
+     								
+
+                                 }else if(subject.equals("TEACHER")) {
+                               	  
+                                 	Other oth=new Other(name,subject,somo);
+                             		oth.setSize(1366,800);
+                             		oth.setVisible(true);
+                             		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                             		oth.setResizable(false);
+                             		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
+                             		con.close(); 
+                               	  
+                                 }
+                                 
+                                 else if(subject.equals("ACADEMIC")) {
+                               	  
+                                 	    Academic oth=new Academic(name,subject,somo);
+                               		oth.setSize(1366,800);
+                               		oth.setVisible(true);
+                               		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                               		oth.setResizable(false);
+                               		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
+                               		con.close(); 
+                                 	  
+                                   }}
 							else{
 								JOptionPane.showMessageDialog(null, "Incorrect Username or Password.!   Try Again.....");
 								t1.setText("");
@@ -251,26 +258,16 @@ public class Login extends JFrame {
 				    	
 				    	
 					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null, e.getMessage());
-					}  finally {
-			            try {
-			                if (rs != null) {
-			                    rs.close();
-			                }
-			                if (ps != null) {
-			                    ps.close();
-			                    
-			                } 
-			                } catch (Exception ex) {
-			                // do something
-			                }
-			            }
+				      JOptionPane.showMessageDialog(null, e.getMessage());
+					} finally{
+			            try{
+			                rs.close();
+			                ps.close();
+			            }catch(Exception ex){
+			                ex.getStackTrace();
+			            }}
 				}
-
-		
 			});
-		
-		//setUsername("Mudi"); 
 		
 		t2.addKeyListener(new KeyAdapter(){
 			@SuppressWarnings("static-access")
@@ -280,29 +277,24 @@ public class Login extends JFrame {
 					
 					
 					try {
-
 						
 						String p1=t1.getText();	
 						@SuppressWarnings("deprecation")
 						String p2=t2.getText();
 						
-					
-						
-				    	     String sql2 ="select count(Username) from Account where Password = '"+p2+"' and Username='"+p1+"'  ";
-					    	 ps=con.prepareStatement(sql2);
-					    	 rs=ps.executeQuery();
-					    	 int count=Integer.parseInt(rs.getString("count(Username)"));
-					    	
+				    	     String sql2 ="select count(username) from Account where password = '"+p2+"' and username='"+p1+"'  ";
+					    	 PreparedStatement ps=con.prepareStatement(sql2);
+					    	  rs=ps.executeQuery();
+					    	 int count=Integer.parseInt(rs.getString("count(username)"));
+					    	 
 					    	 
 							if(count>0 )
 							{
-								
-								
 								dispose();
-							
+								
 						    	
-						    	 String sql="select * from Account  where Username ='"+t1.getText()+"' ";
-						    	 ps=con.prepareStatement(sql);
+						    	 String sql11="select * from Account  where Username ='"+t1.getText()+"' ";
+						    	 ps=con.prepareStatement(sql11);
 						    	 rs=ps.executeQuery();
 						    	 subject= rs.getString("Level");
 						    	 first= rs.getString("FirstName");
@@ -312,21 +304,33 @@ public class Login extends JFrame {
 						    	
 						    	 name=level.toLowerCase()+" "+first+"  "+last;
 						    	 
- 
-                                  if(subject.equals("ADMIN")) {
-                                
-                                    Admin m=new Admin(name,subject,somo);
-      								m.setSize(1366,800);
-      								m.setVisible(true);
-      								m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      								m.setResizable(false);
-      								m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
-                                    con.close();
-      								
 
-                                  }else if(subject.equals("TEACHER")) {
-                                	  
+                                if(subject.equals("ADMIN")) {
+                              
+                                  Admin m=new Admin(name,subject,somo);
+    								m.setSize(1366,800);
+    								m.setVisible(true);
+    								m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    								m.setResizable(false);
+    								m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
+                                  con.close();
+    								
+
+                                }else if(subject.equals("TEACHER")) {
+                              	  
                                 	Other oth=new Other(name,subject,somo);
+                            		oth.setSize(1366,800);
+                            		oth.setVisible(true);
+                            		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                            		oth.setResizable(false);
+                            		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
+                            		con.close(); 
+                              	  
+                                }
+                                
+                                else if(subject.equals("ACADEMIC")) {
+                              	  
+                                	    Academic oth=new Academic(name,subject,somo);
                               		oth.setSize(1366,800);
                               		oth.setVisible(true);
                               		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -334,21 +338,7 @@ public class Login extends JFrame {
                               		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
                               		con.close(); 
                                 	  
-                                  }
-                                  
-                                  else if(subject.equals("ACADEMIC")) {
-                                	  
-                                  	    Academic oth=new Academic(name,subject,somo);
-                                		oth.setSize(1366,800);
-                                		oth.setVisible(true);
-                                		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                                		oth.setResizable(false);
-                                		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
-                                		con.close(); 
-                                  	  
-                                    }
-						    	
-							}
+                                  }}
 							else{
 								JOptionPane.showMessageDialog(null, "Incorrect Username or Password.!   Try Again.....");
 								t1.setText("");
@@ -359,19 +349,14 @@ public class Login extends JFrame {
 				    	
 				    	
 					} catch (SQLException ez) {
-						System.out.print(ez.getMessage());
-					}   finally {
-			            try {
-			                if (rs != null) {
-			                    rs.close();
-			                }
-			                if (ps != null) {
-			                    ps.close();
-			                }
-			                } catch (Exception ex) {
-			                // do something
-			                }
-			            }
+						System.out.print(ez.getStackTrace());
+					}  finally{
+			            try{
+			                rs.close();
+			                ps.close();
+			            }catch(Exception ex){
+			                ex.getStackTrace();
+			            }}
 				}
 				
 			}});
@@ -381,66 +366,70 @@ public class Login extends JFrame {
 			public void keyReleased(KeyEvent e)	{
 				
 				if(e.getKeyCode()==e.VK_ENTER){
-				
+					
 					try {
-
 						
 						String p1=t1.getText();	
 						@SuppressWarnings("deprecation")
 						String p2=t2.getText();
 						
-					
-						
-				    	     String sql2 ="select count(Username) from Account where Password = '"+p2+"' and Username='"+p1+"'  ";
-					    	 ps=con.prepareStatement(sql2);
+				    	     String sql2 ="select count(username) from Account where password = '"+p2+"' and username='"+p1+"'  ";
+					    	 PreparedStatement ps=con.prepareStatement(sql2);
 					    	 rs=ps.executeQuery();
-					    	 int count=Integer.parseInt(rs.getString("count(Username)"));
-					    	
+					    	 int count=Integer.parseInt(rs.getString("count(username)"));
+					    	 
 					    	 
 							if(count>0 )
 							{
-								
-								
 								dispose();
 								
 						    	
-						    	 String sql="select * from Account  where Username ='"+t1.getText()+"' ";
-						    	 ps=con.prepareStatement(sql);
+						    	 String sql11="select * from Account  where Username ='"+t1.getText()+"' ";
+						    	 ps=con.prepareStatement(sql11);
 						    	 rs=ps.executeQuery();
 						    	 subject= rs.getString("Level");
 						    	 first= rs.getString("FirstName");
 						    	 last= rs.getString("LastName");
 						    	 level= rs.getString("Level");
 						    	 somo= rs.getString("Subject");
-						    	 
+						    	
 						    	 name=level.toLowerCase()+" "+first+"  "+last;
 						    	 
 
-                                  if(subject.equals("ADMIN")) {
-                                	  
-                                    Admin m=new Admin(name,subject,somo);
-      								m.setSize(1366,800);
-      								m.setVisible(true);
-      								m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-      								m.setResizable(false);
-      								m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
-      							    con.close();
-                                	  
-                                  }else {
-                                	  
+                                if(subject.equals("ADMIN")) {
+                              
+                                  Admin m=new Admin(name,subject,somo);
+    								m.setSize(1366,800);
+    								m.setVisible(true);
+    								m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    								m.setResizable(false);
+    								m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
+                                  con.close();
+    								
+
+                                }else if(subject.equals("TEACHER")) {
+                              	  
                                 	Other oth=new Other(name,subject,somo);
+                            		oth.setSize(1366,800);
+                            		oth.setVisible(true);
+                            		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                            		oth.setResizable(false);
+                            		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
+                            		con.close(); 
+                              	  
+                                }
+                                
+                                else if(subject.equals("ACADEMIC")) {
+                              	  
+                                	    Academic oth=new Academic(name,subject,somo);
                               		oth.setSize(1366,800);
                               		oth.setVisible(true);
                               		oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                               		oth.setResizable(false);
                               		oth.setIconImage(Toolkit.getDefaultToolkit().getImage(oth.getClass().getResource("/lo.png")));
-                              	    con.close();
+                              		con.close(); 
                                 	  
-                                  }
-						    	
-								
-								
-							}
+                                  }}
 							else{
 								JOptionPane.showMessageDialog(null, "Incorrect Username or Password.!   Try Again.....");
 								t1.setText("");
@@ -452,127 +441,101 @@ public class Login extends JFrame {
 				    	
 					} catch (SQLException ez) {
 						System.out.print(ez.getMessage());
-					} finally {
-			            try {
-			                if (rs != null) {
-			                    rs.close();
-			                }
-			                if (ps != null) {
-			                    ps.close();
-			                }
-			                } catch (Exception ex) {
-			                // do something
-			                }
-			            }
+					} finally{
+			            try{
+			                rs.close();
+			                ps.close();
+			            }catch(Exception ex){
+			                ex.getStackTrace();
+			            }}
+					
 				}
 				
 			}});		
 		
 		bar();
-	//	connect();
-	
 		
 	}
-	
-	
-	
-	private void connect() {
-		 try {
-	            
-	            String url = "jdbc:sqlite:Zeus.sqlite";
-	            con = DriverManager.getConnection(url);
-	            
-	        //    System.out.println("Connection to SQLite has been established.");
-	            
-	        } catch (SQLException e) {
-	           // System.out.println(e.getMessage());
-	        } 
-	}
-
-
 
 	private void bar() {
 
+			Icon alarm=new ImageIcon(this.getClass().getResource("/alarm.png"));
+			Icon cale=new ImageIcon(this.getClass().getResource("/cale.png"));
+			Icon ex=new ImageIcon(this.getClass().getResource("/exit.png"));
+			Icon ab=new ImageIcon(this.getClass().getResource("/ab.png"));
+			JMenuBar bar=new JMenuBar();
+			setJMenuBar(bar);
+
+			JMenu file=new JMenu("File");
+			bar.add(file);
+			JMenuItem exit=new JMenuItem("Exit");
+			
+			exit.setIcon(ex);
+
+			
+			file.add(exit);
+			JMenu help=new JMenu("Help");
+			bar.add(help);
+			JMenuItem about=new JMenuItem("About System");
+			about.setIcon(ab);
+			about.addActionListener(new ActionListener(){
+
+				public void actionPerformed(ActionEvent arg0) {
+					Icon at=new ImageIcon(this.getClass().getResource("/z.png"));
+					   JOptionPane.showMessageDialog(null,  "\tSTUDENT’S RESULT MANAGEMENT SYSTEM\n**************************************************\nThis Software was Designed and Created by\n MOHAMED YUSUPH.This is not a free Software \nand you are not allowed to re-distribute it without\n the prior permission of the developer\n  \nDeveloper’s Contacts:\n************************\nPhone +255 778 939 544 / +255 675 785 592\nEmail: myusuph2@gmail.com\n \nCOPYRIGHT RESERVED ©2018-2019", "About Software", 0, at);
+					
+				}});
+			
+			
+			help.add(about);
 
 
-		final Icon alarm=new ImageIcon(this.getClass().getResource("/alarm.png"));
-		final Icon cale=new ImageIcon(this.getClass().getResource("/cale.png"));
-		Icon ex=new ImageIcon(this.getClass().getResource("/exit.png"));
-		Icon ab=new ImageIcon(this.getClass().getResource("/ab.png"));
-		JMenuBar bar=new JMenuBar();
-		setJMenuBar(bar);
+			hash=new JLabel("            " );
+			bar.add(hash);
+			//bar.add(sign); 
+			empty=new JLabel("                                  ");
+			kappa=new JLabel("                                                                ");
+			bar.add(empty);
 
-		JMenu file=new JMenu("File");
-		bar.add(file);
-		final JMenuItem exit=new JMenuItem("Exit");
 		
-		exit.setIcon(ex);
+			exit.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent arg0) {
+				int mudi=JOptionPane.showConfirmDialog(exit,"Are you sure you want to Exit ?","Message", JOptionPane.YES_NO_OPTION);
+				if(mudi==JOptionPane.YES_OPTION){
+					System.exit(0);
+				}}});
+			
+			
+			//empty=new JLabel("                                                                   ");
+			time=new JLabel();time.setForeground(Color.BLACK);time.setFont(new Font("serif",Font.BOLD+Font.PLAIN,12));
+			date=new JLabel();date.setForeground(Color.BLACK);date.setFont(new Font("serif",Font.BOLD+Font.PLAIN,12));
+			bar.add(kappa);
+			bar.add(date);
+			bar.add(empty);
+			bar.add(time);
 
-		
-		file.add(exit);
-		JMenu help=new JMenu("Help");
-		bar.add(help);
-		JMenuItem about=new JMenuItem("About System");
-		about.setIcon(ab);
-		about.addActionListener(new ActionListener(){
+		      Thread th=new Thread(){
+		      public void run(){
+		    	  for(;;){
+		    		  Calendar timer=Calendar.getInstance();
+		    		  timer.getTime();
+		    		  SimpleDateFormat df= new SimpleDateFormat("hh:mm:ss a");
+		    		  time.setText(df.format(timer.getTime()));time.setIcon(alarm);
 
-			public void actionPerformed(ActionEvent arg0) {
-				Icon at=new ImageIcon(this.getClass().getResource("/z.png"));
-				   JOptionPane.showMessageDialog(null,  "\tSTUDENT’S RESULT MANAGEMENT SYSTEM\n**************************************************\nThis Software was Designed and Created by\n MOHAMED YUSUPH.This is not a free Software \nand you are not allowed to re-distribute it without\n the prior permission of the developer\n  \nDeveloper’s Contacts:\n************************\nPhone +255 778 939 544 / +255 675 785 592\nEmail: myusuph2@gmail.com\n \nCOPYRIGHT RESERVED ©2018-2019", "About Software", 0, at);
-				
-			}});
-		
-		
-		help.add(about);
-
-
-		hash=new JLabel("            " );
-		bar.add(hash);
-		//bar.add(sign);
-		empty=new JLabel("                                   ");
-		kappa=new JLabel("                                  ");
-		bar.add(empty);
-
-	
-		exit.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0) {
-			int mudi=JOptionPane.showConfirmDialog(exit,"Are you sure you want to Exit ?","Message", JOptionPane.YES_NO_OPTION);
-			if(mudi==JOptionPane.YES_OPTION){
-				System.exit(0);
-			}}});
-		
-		
-		//empty=new JLabel("                                                                   ");
-		time=new JLabel();time.setForeground(Color.BLACK);time.setFont(new Font("serif",Font.BOLD+Font.PLAIN,12));
-		date=new JLabel();date.setForeground(Color.BLACK);date.setFont(new Font("serif",Font.BOLD+Font.PLAIN,12));
-		bar.add(kappa);
-		bar.add(date);
-		bar.add(empty);
-		bar.add(time);
-
-	      Thread th=new Thread(){
-	      public void run(){
-	    	  for(;;){
-	    		  Calendar timer=Calendar.getInstance();
-	    		  timer.getTime();
-	    		  SimpleDateFormat df= new SimpleDateFormat("hh:mm:ss a");
-	    		  time.setText(df.format(timer.getTime()));time.setIcon(alarm);
-
-	    		  SimpleDateFormat dt=new SimpleDateFormat("E dd MMM ,  yyyy");
-	    		  date.setText(dt.format(timer.getTime()));date.setIcon(cale);
+		    		  SimpleDateFormat dt=new SimpleDateFormat("E dd MMM ,  yyyy");
+		    		  date.setText(dt.format(timer.getTime()));date.setIcon(cale);
 
 
-	    		try {
-					sleep(1000);
-				} catch (InterruptedException e) {
+		    		try {
+						sleep(1000);
+					} catch (InterruptedException e) {
 
-				}
-	    	  }
-	      }};
+					}
+		    	  }
+		      }};
 
-	      th.start();
-		
-		
+		      th.start();
+			}
+
 	}
-
-}
+	

@@ -28,7 +28,7 @@ public class Main {
 		
 		
        
-/*
+
 		
 		Login l=new Login();
 		l.setSize(620,330);
@@ -38,7 +38,7 @@ public class Main {
 		l.setLocation(350,200);
 		l.setIconImage(Toolkit.getDefaultToolkit().getImage(l.getClass().getResource("/lo.png")));
 		
-	
+		/*
 		
 		 Other oth=new Other(name,subject,somo); oth.setSize(1366,800);
 	     oth.setVisible(true); oth.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,7 +51,7 @@ public class Main {
 		  m.setVisible(true); m.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		  m.setResizable(false);
 		  m.setIconImage(Toolkit.getDefaultToolkit().getImage(m.getClass().getResource("/lo.png")));
-	*/
+	
 		
 		 Academic ac=new Academic(name,subject,somo); 
 		 ac.setSize(1366,800);
@@ -60,7 +60,7 @@ public class Main {
 		 ac.setResizable(false);
 		 ac.setIconImage(Toolkit.getDefaultToolkit().getImage(ac.getClass().getResource("/lo.png")));
 		
-		
+		*/
 	
 	}
 

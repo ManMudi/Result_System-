@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -109,7 +110,7 @@ public class Admin  extends JFrame{
 	private String[]name1={"ADMIN","TEACHER","ACADEMIC"};
 	private String[]name2={"All","PHYSICS","CHEMISTRY","MATH","GEOGRAPHY","BIOLOGY"};
 	private String[]name3={"M","F"};
-	private String[]name4={"FORM I","FORM II","FORM III","FORM IV","LEAVERS"};
+	private String[]name4={"FORM I","FORM II","FORM III","FORM IV","LEAVERS","ALL"};
 	private JButton b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15,b16,b17,b18,b19,b20,b21,b23,b22,b26,b24,b25,b27,b28,b29,b30,b31,b32,b33,b34,b35,b36,b37,ba1,ba2,ba3,ba4;
 	private JButton button1,button2,button3,button4;
 	private JTable table,table1,table2,table3,table4,table5,table6;
@@ -26929,55 +26930,58 @@ public class Admin  extends JFrame{
 						    	
 						    	XSSFCell cell=row.getCell(3);
 						    	
-						    	if(cell==null || cell.getCellType()==CellType.BLANK) {
+						    	if(cell!=null) {
 						    		
-						    		
-						    		
-						    	
-						    	
-						    	
-						    }else {
-						    	
-						    	  if(cell.getCellType()==CellType.NUMERIC) {
-						    		  
-						    		  double mark1=cell.getNumericCellValue();
-						    		 
-						    		  if(mark1 >= 0 && mark1 <= 100){
-						    			  
-						    			   mark=String.format("%.1f",mark1);
-						    			   Double pm=Double.parseDouble(mark)*per;
-											 pms=String.format("%.1f",pm);
+						    		 if(cell.getCellType()==CellType.NUMERIC) {
+							    		  
+							    		  double mark1=cell.getNumericCellValue();
+							    		 
+							    		  if(mark1 >= 0 && mark1 <= 100){
+							    			  
+							    			  mark=String.format("%.1f",mark1);
+							    			   Double pm=Double.parseDouble(mark)*per;
+												 pms=String.format("%.1f",pm);
 
-											if(mark1>=g1 && mark1<=g2) {
-												gr="A";
-											}else if(mark1>=g3 && mark1<=g4) {
-												gr="B";
-											}else if(mark1>=g5 && mark1<=g6) {
-												gr="C";
-											}else if(mark1>=g7 && mark1<=g8) {
-												gr="D";
-											}else if(mark1>=g9 && mark1<=g10) {
-												gr="F";
-											}
-						    			  
-						              } else {
-						            	  JOptionPane.showMessageDialog(null,"Enter Valid Marks ! ");
-						              }
-						    		  
-						    	  }else if(cell.getCellType()==CellType.STRING) {
-						    		  
-						    		 String mark2 =cell.getStringCellValue();
-						    		 if(mark2.matches("-") ) {
-						    			 mark =cell.getStringCellValue();
-						    		 }else {
-						    			 
-						    			 JOptionPane.showMessageDialog(null,"Enter Valid Marks ! ");
-						    		 }
-						    		  
-						    		  
-						    	  }
-						    }
+												if(mark1>=g1 && mark1<=g2) {
+													gr="A";
+												}else if(mark1>=g3 && mark1<=g4) {
+													gr="B";
+												}else if(mark1>=g5 && mark1<=g6) {
+													gr="C";
+												}else if(mark1>=g7 && mark1<=g8) {
+													gr="D";
+												}else if(mark1>=g9 && mark1<=g10) {
+													gr="F";
+												}
+							    			  
+							              } else {
+							            	  JOptionPane.showMessageDialog(null,mark1+"  Is Not Valid Marks ! ");
+							              }
+							    		  
+							    	  }else if(cell.getCellType()==CellType.STRING) {
+							    		  
+							    		 String mark2 =cell.getStringCellValue();
+							    		 
+							    		 
+							    		 if(mark2.equals("-") ) {
+							    			 mark ="-";pms="-";gr="-";
+							    		 }else if(mark2.isEmpty()  || mark2.equals(null)){
+							    			 
+							    			 mark ="";pms="";gr="";
+							    		 }
+							    		 else {
+							    			 
+							    			 JOptionPane.showMessageDialog(null,mark2+"  Is Not Valid Marks ! ");
+							    		 }
+							    		 
+						    		
+						    	}
 						    	
+						    	 
+						    	  }
+						    	 
+						    	 
+						    
 						    	
 						    	if(cou>0) {
 									
@@ -27010,6 +27014,8 @@ public class Admin  extends JFrame{
 						    	
 						    }
 						    JOptionPane.showMessageDialog(null,"Marks Added Successfully !");
+						    inputstream.close();
+						    workbook.close();
 					    	
 						  }
 						
@@ -27019,7 +27025,7 @@ public class Admin  extends JFrame{
 			        }
 				
 				}catch(Exception ex) {
-					JOptionPane.showMessageDialog(null, ex.getStackTrace());
+					JOptionPane.showMessageDialog(null, ex.getMessage());
 				}   finally {
 		            try {
 		                if (rs != null) {
@@ -30660,7 +30666,8 @@ try {
 						      FileOutputStream out = new FileOutputStream(new File("Attendance "+box40.getSelectedItem().toString().replaceAll("'", "''")+"~"+box41.getSelectedItem().toString().replaceAll("'", "''")+"~"+box42.getSelectedItem().toString().replaceAll("'", "''")+"~"+box43.getSelectedItem().toString().replaceAll("'", "''")+".xlsx"));
 						      workbook.write(out);
 						      Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler "+"Attendance "+box40.getSelectedItem().toString().replaceAll("'", "''")+"~"+box41.getSelectedItem().toString().replaceAll("'", "''")+"~"+box42.getSelectedItem().toString().replaceAll("'", "''")+"~"+box43.getSelectedItem().toString().replaceAll("'", "''")+".xlsx");
-						      out.close();   
+						      out.close();  
+						      workbook.close();
 							}catch(Exception ex) {
 								JOptionPane.showMessageDialog(null, ex.getMessage());
 							}

@@ -26929,55 +26929,58 @@ public class Academic extends JFrame{
 						    	
 						    	XSSFCell cell=row.getCell(3);
 						    	
-						    	if(cell==null || cell.getCellType()==CellType.BLANK) {
+						    	if(cell!=null) {
 						    		
-						    		
-						    		
-						    	
-						    	
-						    	
-						    }else {
-						    	
-						    	  if(cell.getCellType()==CellType.NUMERIC) {
-						    		  
-						    		  double mark1=cell.getNumericCellValue();
-						    		 
-						    		  if(mark1 >= 0 && mark1 <= 100){
-						    			  
-						    			   mark=String.format("%.1f",mark1);
-						    			   Double pm=Double.parseDouble(mark)*per;
-											 pms=String.format("%.1f",pm);
+						    		 if(cell.getCellType()==CellType.NUMERIC) {
+							    		  
+							    		  double mark1=cell.getNumericCellValue();
+							    		 
+							    		  if(mark1 >= 0 && mark1 <= 100){
+							    			  
+							    			  mark=String.format("%.1f",mark1);
+							    			   Double pm=Double.parseDouble(mark)*per;
+												 pms=String.format("%.1f",pm);
 
-											if(mark1>=g1 && mark1<=g2) {
-												gr="A";
-											}else if(mark1>=g3 && mark1<=g4) {
-												gr="B";
-											}else if(mark1>=g5 && mark1<=g6) {
-												gr="C";
-											}else if(mark1>=g7 && mark1<=g8) {
-												gr="D";
-											}else if(mark1>=g9 && mark1<=g10) {
-												gr="F";
-											}
-						    			  
-						              } else {
-						            	  JOptionPane.showMessageDialog(null,"Enter Valid Marks ! ");
-						              }
-						    		  
-						    	  }else if(cell.getCellType()==CellType.STRING) {
-						    		  
-						    		 String mark2 =cell.getStringCellValue();
-						    		 if(mark2.matches("-") ) {
-						    			 mark =cell.getStringCellValue();
-						    		 }else {
-						    			 
-						    			 JOptionPane.showMessageDialog(null,"Enter Valid Marks ! ");
-						    		 }
-						    		  
-						    		  
-						    	  }
-						    }
+												if(mark1>=g1 && mark1<=g2) {
+													gr="A";
+												}else if(mark1>=g3 && mark1<=g4) {
+													gr="B";
+												}else if(mark1>=g5 && mark1<=g6) {
+													gr="C";
+												}else if(mark1>=g7 && mark1<=g8) {
+													gr="D";
+												}else if(mark1>=g9 && mark1<=g10) {
+													gr="F";
+												}
+							    			  
+							              } else {
+							            	  JOptionPane.showMessageDialog(null,mark1+"  Is Not Valid Marks ! ");
+							              }
+							    		  
+							    	  }else if(cell.getCellType()==CellType.STRING) {
+							    		  
+							    		 String mark2 =cell.getStringCellValue();
+							    		 
+							    		 
+							    		 if(mark2.equals("-") ) {
+							    			 mark ="-";pms="-";gr="-";
+							    		 }else if(mark2.isEmpty()  || mark2.equals(null)){
+							    			 
+							    			 mark ="";pms="";gr="";
+							    		 }
+							    		 else {
+							    			 
+							    			 JOptionPane.showMessageDialog(null,mark2+"  Is Not Valid Marks ! ");
+							    		 }
+							    		 
+						    		
+						    	}
 						    	
+						    	 
+						    	  }
+						    	 
+						    	 
+						    
 						    	
 						    	if(cou>0) {
 									
@@ -27010,6 +27013,8 @@ public class Academic extends JFrame{
 						    	
 						    }
 						    JOptionPane.showMessageDialog(null,"Marks Added Successfully !");
+						    inputstream.close();
+						    workbook.close();
 					    	
 						  }
 						
